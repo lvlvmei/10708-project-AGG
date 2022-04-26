@@ -584,6 +584,8 @@ if __name__ == "__main__":
     CATA = sys.argv[1]
     SUBCATA = sys.argv[2]
     SAMPLE = sys.argv[3]
+    
+
 
     # basic_info = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_info.txt', 'a')
     # basic_contain = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_contain.txt', 'a')
@@ -598,13 +600,16 @@ if __name__ == "__main__":
 
     this_system = System(CATA, SUBCATA, SAMPLE)
     AGG = this_system.identification()
-    SRF = this_system.SRF
+#     SRF = this_system.SRF
     C = Grain(this_system, this_system.candidate)
-    NRF = C.NRF
+#     NRF = C.NRF
+    INN = C.INN
+    IRS = C.IRS
+    TYP = C.type
     
-    check_content = [AGG, NRF, SRF]
+#     check_content = [AGG, NRF, SRF]
 
-    basic_last_size_content = [this_system.SAMPLE, this_system.identification(), this_system.SRF, C.NRF, C.INN, C.IRS, C.whether_it_disappear(this_system)]
+#     basic_last_size_content = [this_system.SAMPLE, this_system.identification(), this_system.SRF, C.NRF, C.INN, C.IRS, C.whether_it_disappear(this_system)]
 
 
 
