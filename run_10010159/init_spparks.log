@@ -1,0 +1,67 @@
+SPPARKS (19 Nov 2013 -- potts-ori branch)
+seed 1292757093
+variable systemsize equal 1024
+variable	 volume equal ${systemsize}*${systemsize}
+variable	 volume equal 1024*${systemsize}
+variable	 volume equal 1024*1024
+
+app_style	 potts ${volume}
+app_style	 potts 1048576
+dimension	 2
+lattice		 sq/8n 1.0
+region		 box block 0 ${systemsize} 0 ${systemsize} -0.5 0.5
+region		 box block 0 1024 0 ${systemsize} -0.5 0.5
+region		 box block 0 1024 0 1024 -0.5 0.5
+create_box	 box
+Created box = (0 0 -0.5) to (1024 1024 0.5)
+  1 by 1 by 1 processor grid
+create_sites	 box
+Creating sites ...
+  1048576 sites
+  1048576 sites have 8 neighbors
+set		 site unique
+  1048576 settings made for site
+
+# sweep 		 random
+solve_style      tree
+sector		  no
+
+temperature	 0.9
+
+diag_style       cluster
+stats            100.0
+
+dump		 1 dream3d 503.0 initial*.dream3d id site version 6.0 dataset SyntheticVolume
+dump_modify	 1 delay 503
+run 		 500.0
+Setting up run ...
+      Time    Naccept    Nreject    Nsweeps        CPU     Nclust        <N>        <R>
+         0          0          0          0          0    1048576          1          1
+       100   21148284          0          0        139       7188    145.879    11.2112
+       200   30062895          0          0        193       3977     263.66     15.092
+       300   37071436          0          0        235       2868    365.612    17.7004
+       400   43085214          0          0        271       2232    469.792    20.1069
+       500   48451561          0          0        302       1848    567.411    22.1062
+Loop time of 302.472 on 1 procs
+
+Solve time (%) = 36.1291 (11.9446)
+Update time (%) = 0 (0)
+Comm  time (%) = 0 (0)
+Outpt time (%) = 8.14013 (2.6912)
+App   time (%) = 251.322 (83.0892)
+Other time (%) = 6.88116 (2.27497)
+
+temperature 0.1
+run 3
+Setting up run ...
+      Time    Naccept    Nreject    Nsweeps        CPU     Nclust        <N>        <R>
+       500   48451561          0          0          0       1848    567.411    22.1062
+       503   48550985          0          0       0.78       1814    578.046    22.4476
+Loop time of 0.780218 on 1 procs
+
+Solve time (%) = 0.0720797 (9.2384)
+Update time (%) = 0 (0)
+Comm  time (%) = 0 (0)
+Outpt time (%) = 0.20981 (26.8912)
+App   time (%) = 0.48448 (62.0955)
+Other time (%) = 0.0138481 (1.7749)
