@@ -4,6 +4,7 @@ from scipy import ndimage
 import os
 import RBJudge
 import sys
+import io
 
 def import_data(I, S):
     Initial = hdf.File(I, "r")
@@ -220,21 +221,21 @@ def get_two_largest(self, id_list):
         return id_list
 
 
-
-# def out_count_board(count_board):
-#     return print(count_board)
-
 class System(object):
-    def __init__(self, CATA, SUBCATA, SAMPLE):  #CATA = scratch, SUBCATA = AGGmodel-299697-
-        self.filepath = '/Volumes/Samsung_T5/hippolyta/' + str(CATA) + '/' + str(SUBCATA) + '-' + str(int(SAMPLE))  #change the middle
-        # for terminal
-        self.SAMPLE = SAMPLE[4:12]
+    def __init__(self, SAMPLE):  #CATA = scratch, SUBCATA = AGGmodel-299697-
+        # self.filepath = '/Volumes/Samsung_T5/hippolyta/' + str(CATA) + '/' + str(SUBCATA) + '-' + str(int(SAMPLE))  #change the middle
+        # # for terminal
+        # self.SAMPLE = SAMPLE[4:12]
         # self.filepath = '/Volumes/Samsung_T5/hippolyta/' + str(CATA) + '/' + str(SUBCATA) + '/' + str(SAMPLE)
         # self.filepath = '/Volumes/Samsung_T5/hippolyta/' + str(CATA) + '/' + str(SUBCATA) + '/' + str(SAMPLE)
 
         # for pycharm
         # self.SAMPLE = SAMPLE
         # self.filepath = '/Volumes/Samsung_T5/hippolyta/' + str(CATA) + '/' + '/run_' + str(SAMPLE)[0:4] + '/run_' + str(SAMPLE)
+
+        #for github
+        self.filepath= str(SAMPLE)  #"https://github.com/lvlvmei/10708-project-AGG.git" +
+        self.SAMPLE = SAMPLE[4:12]
 
         self.I = self.filepath + '/initial.dream3d'
         self.S = self.filepath + '/stats.h5'
@@ -279,7 +280,7 @@ class System(object):
 
 class God_System(System):
     def __init__(self, CATA, SUBCATA, SAMPLE, step):
-        super(God_System, self).__init__(CATA, SUBCATA, SAMPLE)
+        super(God_System, self).__init__(SAMPLE)
         self.step = step
         self.filename = str(self.filepath + '/' + "agg_dump000%.3d.dream3d" % self.step) #100?250?
         self.FeatureIds = self.get_this_FeatureIds()
@@ -314,6 +315,7 @@ class Grain(object):
         self.nnd = find_nn_d(system, self.ID, 3)
         self.NRF = get_NRF(self)
         self.meta_dis = self.whether_it_disappear(system)
+        self.RCP = get_nnd_key(self.nnd, this_system.candidate)
         #
 
     def whether_it_disappear(self, system):  #delete when predict
@@ -331,8 +333,6 @@ class Grain(object):
         others_nn = other_grain.nn
         share_nn = [nn for nn in its_nn if nn in others_nn]
         return share_nn
-
-    # def structure_dis(self):
 
 class Step_Grain(Grain):
     def __init__(self, system, ID, step):
@@ -512,14 +512,6 @@ class Red(Grain):
                     else:
                         print("into not sure")
                         return candidate.update_not_sure(self.ID)
-                # elif np.sum(count_board[1:2, 1] == 2) == 0 and updated_INN >= 7: #TYPE3_sub2
-                #     # 'LF0', 'IRS', 'LFS', 'LFL'
-                #     if RBJudge.TYPE3_sub2_check(LF0, self.IRS, LFS, LFL) == 0:
-                #         print("into contain")
-                #         return candidate.update_contain(this_system, self.ID)
-                #     else:
-                #         print("into not sure")
-                #         return candidate.update_not_sure(self.ID)
                 print("into not sure")
                 return candidate.update_not_sure(self.ID)
 
@@ -527,7 +519,7 @@ class Red(Grain):
 class Blue(Grain):
     def __init__(self, system, ID):
         super().__init__(system, ID)
-        self.RCP = get_nnd_key(self.nnd, this_system.candidate)
+        
 
     def last_turn(self, candidate):
         small_nn = max(self.nn_size, key=self.nn_size.get)
@@ -560,17 +552,6 @@ class Blue(Grain):
         else:
             print('into not sure')
             return candidate.update_not_sure(self.ID)
-        # else:
-        #     small_nn = max(self.nn_size, key=self.nn_size.get)
-        #     this_small_nn = Grain(this_system, small_nn)
-        #     # BLUE_567_check(NRF, IRS, INN, irs1, rcp1, typ1)
-        #     if BlueJudge.BLUE_567_check(self.NRF, self.IRS, self.INN, this_small_nn.IRS, this_small_nn.RCP,
-        #                                 this_small_nn.type) == 0:
-        #         print('into contain')
-        #         return candidate.update_contain(this_system, self.ID)
-        #     else:
-        #         print('into not sure')
-        #         return candidate.update_not_sure(self.ID)
 ####stop
 
 def write_txt(content, filename):
@@ -581,35 +562,26 @@ def write_txt(content, filename):
     return
 
 if __name__ == "__main__":
-    CATA = sys.argv[1]
-    SUBCATA = sys.argv[2]
-    SAMPLE = sys.argv[3]
-    
+    SAMPLE = sys.argv[1]
 
-
-    # basic_info = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_info.txt', 'a')
-    # basic_contain = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_contain.txt', 'a')
-    # basic_notsure = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_notsure.txt', 'a')
-    # basic_play = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_play.txt', 'a')
-    # basic_last_size = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_last_size.txt', 'a')
-    # basic_check_1106 = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_check_1106.txt', 'a')
-    # basic_check_1206 = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_check_1206.txt', 'a')
-    # basic_check_1006 = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_check_1006.txt', 'a')
-    # basic_check_906 = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_check_906.txt', 'a')
-    basic_tf_2000 = open('/Users/lvmeizhong/Desktop/hippolyta-pro/data/basic_tf_2000.txt', 'a')
-
-    this_system = System(CATA, SUBCATA, SAMPLE)
+    this_system = System(SAMPLE)
     AGG = this_system.identification()
-#     SRF = this_system.SRF
-    C = Grain(this_system, this_system.candidate)
-#     NRF = C.NRF
-    INN = C.INN
-    IRS = C.IRS
-    TYP = C.type
-    
-#     check_content = [AGG, NRF, SRF]
+    print("The initial decision of this candidate grain is", this_system.initial_decision())
 
-#     basic_last_size_content = [this_system.SAMPLE, this_system.identification(), this_system.SRF, C.NRF, C.INN, C.IRS, C.whether_it_disappear(this_system)]
+    C = Grain(this_system, this_system.candidate)
+
+    print("Initial relative grain size =", C.IRS)
+    print("Initial nearest neighbor number =", C.INN)
+    print("Red grain fraction in system =", this_system.SRF)
+    print("Red grain fraction in the nearest neighborhood =", C.NRF)
+
+    C = White(this_system, this_system.candidate)
+
+    print("predicted size is ", C.inner_size)
+    the_result  =  [True if C.inner_size > 6000 else False][0]
+    print("The prediction of AGG is", the_result)
+    print("In real, this sysyem has AGG", AGG)
+
 
 
 
