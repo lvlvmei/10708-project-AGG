@@ -28,11 +28,11 @@ def train_test_split_balanced(dataset, selected_features, test_size= 0.333, rand
     return pd.concat(X_train,axis=0), pd.concat(X_test, axis=0), pd.concat(Y_train, axis=0), pd.concat(Y_test, axis=0)
 
 
-blue_5nn = pd.read_csv("/Users/lvmeizhong/Desktop/hippolyta-pro/data/blue_inn_5-o.txt", sep=',')
+blue_5nn = pd.read_csv("data/blue_inn_5-o.txt", sep=',')
 blue_5nn = blue_5nn.drop(['NAN'], axis=1)
-blue_6nn = pd.read_csv("/Users/lvmeizhong/Desktop/hippolyta-pro/data/blue_inn_6-o.txt", sep=',')
+blue_6nn = pd.read_csv("data/blue_inn_6-o.txt", sep=',')
 blue_6nn = blue_6nn.drop(['NAN'], axis=1)
-blue_7nn = pd.read_csv("/Users/lvmeizhong/Desktop/hippolyta-pro/data/blue_inn_7-o.txt", sep=',')
+blue_7nn = pd.read_csv("data/blue_inn_7-o.txt", sep=',')
 blue_7nn = blue_7nn.drop(['NAN'], axis=1)
 
 blue_5_7_nn = pd.concat((blue_5nn, blue_7nn, blue_6nn),sort=True)
@@ -50,7 +50,7 @@ def model_SVM_567(dataset, selected_features):
 BLUE_567_model = model_SVM_567(blue_5_7_nn, ['NRF', 'IRS', 'INN', 'irs1', 'rcp1', 'typ1'])
 
 def BLUE_567_check(NRF, IRS, INN, irs1, rcp1, typ1):
-    predict_set = [[NRF, IRS, INN, irs1, rcp1, typ1]]
+    predict_set = [[NRF, IRS, INN, irs1, rcp1[0], typ1]]
     clf, scaler = BLUE_567_model
     predict_set = scaler.transform(predict_set)
     return int(float(clf.predict(predict_set)[0]))
